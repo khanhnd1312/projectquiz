@@ -23,49 +23,10 @@ public class Course implements Serializable {
 
     private String nameCourse;
     private Integer quantityQuestion;
-    private Time leftTime;
+    private Time time;
 
     public Course() {
     }
+
 //    Get and Set
 }
-
-//public class Course {
-//    private int idCourse;
-//    private String nameCourse;
-//    private int quantityQuestion;
-//    private Time leftTime;
-//
-//    public Course(){
-//
-//    }
-//
-//    public int getId(){
-//        return idCourse;
-//    }
-//    public int setId(int idCourse){
-//        this.idCourse = idCourse;
-//    }
-//    public String getNameCourse(){
-//        return nameCourse;
-//    }
-//    public String setNameCourse(String nameCourse){
-//        this.nameCourse = nameCourse;
-//    }
-//    public int getQuantityQuestion(){
-//        return quantityQuestion;
-//    }
-//    public int setQuantityQuestion(int quantityQuestion){
-//        this.quantityQuestion = quantityQuestion;
-//    }
-//    public Time getLeftTime(){
-//        return leftTime;
-//    }
-//    public Time setLeftTime(Time leftTime){
-//        this.leftTime = leftTime;
-//    }
-
-
-
-
-
