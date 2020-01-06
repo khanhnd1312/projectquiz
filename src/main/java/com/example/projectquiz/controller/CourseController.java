@@ -64,24 +64,6 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//    @RequestMapping(value = "/products/{id}",
-//            method = RequestMethod.PUT)
-//    public ResponseEntity<Product> updateProduct(
-//            @PathVariable("id") Integer id,
-//            @RequestBody Product product) {
-//        Optional<Product> currentProduct = productService
-//                .findById(id);
-//
-//        if (!currentProduct.isPresent()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//
-//        currentProduct.get().setName(product.getName());
-//        currentProduct.get().setPrice(product.getPrice());
-//        currentProduct.get().setDescription(product.getDescription());
-//
-//        productService.save(currentProduct.get());
-//        return new ResponseEntity<>(currentProduct.get(), HttpStatus.OK);
-//    }
+
 
 }
