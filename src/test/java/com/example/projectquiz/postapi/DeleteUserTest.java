@@ -1,4 +1,4 @@
-package com.example.projectquiz.getapi;
+package com.example.projectquiz.postapi;
 
 import com.example.projectquiz.model.User;
 import io.restassured.RestAssured;
@@ -26,13 +26,12 @@ public class DeleteUserTest {
 
         given().log().all().contentType(ContentType.JSON).when().body(user).post();
 
-        // Act: Call API delete student
+
         Response res = given()
                 .contentType(ContentType.JSON)
                 .when()
                 .delete("/{id}", user.getIdUser());
 
-        // Assert
         res.then().statusCode(204);
     }
 }

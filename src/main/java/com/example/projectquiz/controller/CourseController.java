@@ -1,6 +1,7 @@
 package com.example.projectquiz.controller;
 
 import com.example.projectquiz.model.Course;
+import com.example.projectquiz.model.User;
 import com.example.projectquiz.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -62,6 +63,26 @@ public class CourseController {
         }
         courseService.remove(course.get());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/course/{id}",
+            method = RequestMethod.PUT)
+    public ResponseEntity<Course> updateCourse(
+            @PathVariable("id") Integer idCourse,
+            @RequestBody Course course) {
+        Optional<Course> currentCourse = courseService
+                .findById(idCourse);
+
+        if (!currentCourse.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        currentCourse.get().setNameCourse(course.getNameCourse());
+        currentCourse.get().setQuantityQuestion(course.getQuantityQuestion());
+        currentCourse.get().setTime(course.getTime());
+
+        courseService.save(currentCourse.get());
+        return new ResponseEntity<>(currentCourse.get(), HttpStatus.OK);
     }
 
 
