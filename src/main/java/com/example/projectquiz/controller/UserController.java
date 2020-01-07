@@ -64,5 +64,23 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @RequestMapping(value = "/user/{id}",
+            method = RequestMethod.PUT)
+    public ResponseEntity<User> updateUser(
+            @PathVariable("id") Integer idUser,
+            @RequestBody User user) {
+        Optional<User> currentUser = userService
+                .findById(idUser);
+
+        if (!currentUser.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        currentUser.get().setAccountUser(user.getAccountUser());
+        currentUser.get().setPasswordUser(user.getPasswordUser());
+
+        userService.save(currentUser.get());
+        return new ResponseEntity<>(currentUser.get(), HttpStatus.OK);
+    }
 
 }

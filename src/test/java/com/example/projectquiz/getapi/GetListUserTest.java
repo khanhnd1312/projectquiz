@@ -19,7 +19,7 @@ public class GetListUserTest {
     public void getListUserTest() {
         Response res = given()
                 .when()
-                .get("/user");
+                .get();
 
         res.prettyPrint();
         res.then().statusCode(200);
