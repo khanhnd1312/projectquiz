@@ -21,10 +21,13 @@ public class QAServiceImpl implements QAService {
 //        return (List<QA>) qaRepository.findAll(idCourse);
 //    }
 //
-//    @Override
-//    public Optional<QA> findQAById(Integer idCourseQuestion){
-//        return qaRepository.findById(idCourseQuestion);
-//    }
+    @Override
+    public List<QA> getQaByIdcourse(Integer idCourse) {return qaRepository.findByIdCourse(idCourse);}
+
+    @Override
+    public Optional<QA> findById(Integer idCourse){
+    return qaRepository.findById(idCourse);
+}
 
     @Override
     public void save(QA qa){

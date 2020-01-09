@@ -22,10 +22,10 @@ public class QA implements Serializable {
 
     private Integer idCourse;
     private String nameQuestion;
-    private String Aoption;
-    private String Boption;
-    private String Coption;
-    private String Doption;
+    private String optionA;
+    private String optionB;
+    private String optionC;
+    private String optionD;
     private String correctAnswer;
 
     public QA() {
