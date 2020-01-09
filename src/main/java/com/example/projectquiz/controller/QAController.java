@@ -28,18 +28,6 @@ public class QAController {
         this.qaService = qaService;
     }
 
-//    @RequestMapping(value = "/qa/{idCourse}",
-//            method = RequestMethod.GET,
-//            produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<QA> getQaById(@PathVariable Integer idCourse) {
-//        Optional<QA> qa = qaService.findById(idCourse);
-//
-//        if (!qa.isPresent()) {
-//            return new ResponseEntity<>(qa.get(),
-//                    HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<>(qa.get(), HttpStatus.OK);
-//    }
 
     @RequestMapping(value = "/qa/{idCourse}",
             method = RequestMethod.GET,
@@ -73,6 +61,29 @@ public class QAController {
         }
         qaService.remove(qa.get());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/qa/{id}",
+            method = RequestMethod.PUT)
+    public ResponseEntity<QA> updateQA(
+            @PathVariable("id") Integer idCourseQuestion,
+            @RequestBody QA qa) {
+        Optional<QA> currentQA = qaService.findById(idCourseQuestion);
+
+        if (!currentQA.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        currentQA.get().setIdCourse(qa.getIdCourse());
+        currentQA.get().setNameQuestion(qa.getNameQuestion());
+        currentQA.get().setOptionA(qa.getOptionA());
+        currentQA.get().setOptionB(qa.getOptionB());
+        currentQA.get().setOptionC(qa.getOptionC());
+        currentQA.get().setOptionD(qa.getOptionD());
+        currentQA.get().setCorrectAnswer(qa.getCorrectAnswer());
+
+        qaService.save(currentQA.get());
+        return new ResponseEntity<>(currentQA.get(), HttpStatus.OK);
     }
 
 
