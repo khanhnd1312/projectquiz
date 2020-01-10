@@ -26,7 +26,7 @@ public class QA implements Serializable {
     private String optionB;
     private String optionC;
     private String optionD;
-    private String correctAnswer;
+    private Integer correctAnswer;
 
     public QA() {
     }
