@@ -1,87 +1,137 @@
 package com.example.projectquiz.controller;
 
-import com.example.projectquiz.model.User;
-import com.example.projectquiz.service.UserService;
+import com.example.projectquiz.dto.UserDto;
+import com.example.projectquiz.io.ErrorResponse;
+import com.example.projectquiz.io.ResponseObject;
+import com.example.projectquiz.io.SuccessResponse;
+import com.example.projectquiz.io.request.UserSignUpRequest;
+import com.example.projectquiz.io.request.UserUpdateRequest;
+import com.example.projectquiz.io.response.UserDetailsResponse;
+import com.example.projectquiz.service.user.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserController {
 
+    @Autowired
     private UserService userService;
 
-    @Autowired
-    public UserController(UserService userService){
-        this.userService = userService;
-    }
+    @GetMapping()
+    public ResponseEntity<?> findAllUser() {
+        List<UserDto> userDtos = userService.findAllUser();
 
-    @RequestMapping(value = "/user" , method = RequestMethod.GET)
-    public ResponseEntity<List<User>> findAllUser(){
-        List<User> user = userService.findAllUser();
-        if(user.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (userDtos.isEmpty() || userDtos == null) {
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.NOT_FOUND.value(),
+                            ErrorResponse.NO_RECORD_FOUND.getErrorMessage()),
+                    HttpStatus.NOT_FOUND);
+        } else {
+
+            List<UserDetailsResponse> responses = new ArrayList<>();
+
+            for (UserDto userDto : userDtos) {
+                UserDetailsResponse res = new UserDetailsResponse();
+                BeanUtils.copyProperties(userDto, res);
+
+                responses.add(res);
+            }
+
+            return new ResponseEntity<>(responses, HttpStatus.OK);
         }
-        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user/{id}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUserById(@PathVariable("id") Integer idUser) {
-        Optional<User> user = userService.findById(idUser);
+    @RequestMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findUserById(@PathVariable("id") Long idUser) {
+        UserDto userDto = userService.findById(idUser);
 
-        if (!user.isPresent()) {
-            return new ResponseEntity<>(user.get(),
-                    HttpStatus.NO_CONTENT);
+        if (userDto == null) {
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.NOT_FOUND.value(),
+                            ErrorResponse.NO_RECORD_FOUND.getErrorMessage()),
+                    HttpStatus.NOT_FOUND);
+        } else {
+
+            UserDetailsResponse res = new UserDetailsResponse();
+            BeanUtils.copyProperties(userDto, res);
+
+            return new ResponseEntity<>(res, HttpStatus.OK);
         }
-        return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/createuser", method = RequestMethod.POST)
-    public ResponseEntity<User> createUser(
-            @RequestBody User user,
-            UriComponentsBuilder builder) {
-        userService.save(user);
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
-    }
+    @PostMapping
+    public ResponseEntity<?> createUser(@RequestBody @Valid UserSignUpRequest request) {
 
-    @RequestMapping(value = "/user/{id}",
-            method = RequestMethod.DELETE)
-    public ResponseEntity<User> deleteUser(
-            @PathVariable("id") Integer idUser) {
-        Optional<User> user = userService.findById(idUser);
-        if (!user.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        UserDto requestDto = new UserDto();
+        BeanUtils.copyProperties(request, requestDto);
+
+        UserDto createdUser = userService.createUser(requestDto);
+        if (createdUser == null) {
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.BAD_REQUEST.value(),
+                            ErrorResponse.CREATE_FAILED.getErrorMessage()),
+                    HttpStatus.BAD_REQUEST);
+        } else {
+            UserDetailsResponse res = new UserDetailsResponse();
+            BeanUtils.copyProperties(createdUser, res);
+
+            return new ResponseEntity<>(res, HttpStatus.CREATED);
         }
-        userService.remove(user.get());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/user/{id}",
-            method = RequestMethod.PUT)
-    public ResponseEntity<User> updateUser(
-            @PathVariable("id") Integer idUser,
-            @RequestBody User user) {
-        Optional<User> currentUser = userService
-                .findById(idUser);
 
-        if (!currentUser.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PutMapping(value = "{id}")
+    public ResponseEntity<?> updateUser(
+            @PathVariable("id") Long idUser,
+            @RequestBody @Valid UserUpdateRequest request) {
+
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(request, userDto);
+
+        UserDto updatedUser = userService.updateUser(idUser, userDto);
+
+        if (updatedUser == null) {
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.BAD_REQUEST.value(),
+                            ErrorResponse.UPDATE_FAILED.getErrorMessage()),
+                    HttpStatus.BAD_REQUEST);
+        } else {
+             UserDetailsResponse res = new UserDetailsResponse();
+             BeanUtils.copyProperties(updatedUser, res);
+
+            return new ResponseEntity<>(res, HttpStatus.OK);
         }
-
-        currentUser.get().setAccountUser(user.getAccountUser());
-        currentUser.get().setPasswordUser(user.getPasswordUser());
-
-        userService.save(currentUser.get());
-        return new ResponseEntity<>(currentUser.get(), HttpStatus.OK);
     }
 
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long idUser) {
+        boolean isUserDeleted = userService.deleteUser(idUser);
+
+        if (!isUserDeleted) {
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                            ErrorResponse.DELETE_FAILED.getErrorMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.OK.value(),
+                            SuccessResponse.DELETE_SUCCESS.getSuccessMessage()),
+                    HttpStatus.OK);
+        }
+    }
 }

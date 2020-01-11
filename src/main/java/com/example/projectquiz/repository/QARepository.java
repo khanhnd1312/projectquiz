@@ -1,6 +1,6 @@
 package com.example.projectquiz.repository;
 
-import com.example.projectquiz.model.QA;
+import com.example.projectquiz.entity.QA;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

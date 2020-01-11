@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static io.restassured.RestAssured.*;
 
-public class GetListUserTest {
+public class GetListUserEntityTest {
     @Before
     public void init() {
         RestAssured.baseURI = "http://localhost";

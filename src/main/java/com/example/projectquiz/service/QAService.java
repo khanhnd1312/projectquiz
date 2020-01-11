@@ -1,6 +1,6 @@
 package com.example.projectquiz.service;
 
-import com.example.projectquiz.model.QA;
+import com.example.projectquiz.entity.QA;
 
 import java.util.List;
 import java.util.Optional;

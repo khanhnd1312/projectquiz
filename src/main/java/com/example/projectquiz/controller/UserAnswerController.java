@@ -1,7 +1,7 @@
 package com.example.projectquiz.controller;
 
-import com.example.projectquiz.model.AnswerOnly;
-import com.example.projectquiz.model.QA;
+import com.example.projectquiz.entity.AnswerOnly;
+import com.example.projectquiz.entity.QA;
 import com.example.projectquiz.service.QAService;
 import com.example.projectquiz.service.UserAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;

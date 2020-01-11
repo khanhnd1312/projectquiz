@@ -1,6 +1,6 @@
 package com.example.projectquiz.service;
 
-import com.example.projectquiz.model.Course;
+import com.example.projectquiz.entity.Course;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,9 +1,15 @@
 package com.example.projectquiz.repository;
 
-import com.example.projectquiz.model.User;
+import com.example.projectquiz.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends CrudRepository<UserEntity, Long> {
+    List<UserEntity> findAll();
+    UserEntity findByIdUser(Long id);
+    UserEntity save(UserEntity userEntity);
+    boolean existsByAccountUser(String accountUser);
 }

@@ -1,6 +1,6 @@
 package com.example.projectquiz.service;
 
-import com.example.projectquiz.model.Course;
+import com.example.projectquiz.entity.Course;
 import com.example.projectquiz.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

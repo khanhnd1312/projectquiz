@@ -1,6 +1,6 @@
 package com.example.projectquiz.controller;
 
-import com.example.projectquiz.model.QA;
+import com.example.projectquiz.entity.QA;
 import com.example.projectquiz.service.QAService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
