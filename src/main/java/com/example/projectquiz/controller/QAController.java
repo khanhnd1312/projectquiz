@@ -18,6 +18,7 @@ import java.util.Optional;
 //import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/api")
 public class QAController {
 
     private QAService qaService;
