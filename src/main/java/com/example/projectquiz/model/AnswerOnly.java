@@ -1,9 +1,8 @@
 package com.example.projectquiz.model;
 
-import lombok.Setter;
 import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
 
 @Getter

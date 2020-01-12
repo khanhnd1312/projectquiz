@@ -2,7 +2,6 @@ package com.example.projectquiz.controller;
 
 import com.example.projectquiz.model.AnswerOnly;
 import com.example.projectquiz.model.QA;
-import com.example.projectquiz.model.UserAnswer;
 import com.example.projectquiz.service.QAService;
 import com.example.projectquiz.service.UserAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 public class UserAnswerController {
 
     private UserAnswerService userAnswerService;
