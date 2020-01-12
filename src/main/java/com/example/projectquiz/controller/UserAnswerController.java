@@ -1,9 +1,9 @@
 package com.example.projectquiz.controller;
 
 import com.example.projectquiz.entity.AnswerOnly;
-import com.example.projectquiz.entity.QA;
-import com.example.projectquiz.service.QAService;
-import com.example.projectquiz.service.UserAnswerService;
+import com.example.projectquiz.entity.QaEntity;
+import com.example.projectquiz.service.qa.QAService;
+import com.example.projectquiz.service.answer.UserAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,23 +26,23 @@ public class UserAnswerController {
     public UserAnswerController(UserAnswerService userAnswerService) {this.userAnswerService = userAnswerService;}
 
 
-    @RequestMapping (value = "/doexam/{idCourse}",method = RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE )
-    public ResponseEntity<?> postExam(
-            @RequestBody List<AnswerOnly> ao,
-            UriComponentsBuilder builder,
-            @PathVariable Integer idCourse) {
-
-        List<QA> getlistqa = qaService.getQaByIdcourse(idCourse);
-
-        int kq = 0;
-        for (int i = 0 ; i < getlistqa.size() ; i++){
-            if(ao.get(i).getIdCourseQuestion() == getlistqa.get(i).getIdCourseQuestion()){
-                if(ao.get(i).getIdAnswer() == getlistqa.get(i).getCorrectAnswer()){
-                    kq += 1;
-                }
-            }
-        }
-
-        return new ResponseEntity(kq,HttpStatus.CREATED);
-    }
+//    @RequestMapping (value = "/doexam/{idCourse}",method = RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE )
+//    public ResponseEntity<?> postExam(
+//            @RequestBody List<AnswerOnly> ao,
+//            UriComponentsBuilder builder,
+//            @PathVariable Long idCourse) {
+//
+//        List<QaEntity> getlistqa = qaService.findByIdCourse(idCourse);
+//
+//        int kq = 0;
+//        for (int i = 0 ; i < getlistqa.size() ; i++){
+//            if(ao.get(i).getIdCourseQuestion() == getlistqa.get(i).getIdCourseQuestion()){
+//                if(ao.get(i).getIdAnswer() == getlistqa.get(i).getCorrectAnswer()){
+//                    kq += 1;
+//                }
+//            }
+//        }
+//
+//        return new ResponseEntity(kq,HttpStatus.CREATED);
+//    }
 }

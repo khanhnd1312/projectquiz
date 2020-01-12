@@ -1,7 +1,8 @@
-package com.example.projectquiz.service;
+package com.example.projectquiz.service.answer;
 
 import com.example.projectquiz.entity.UserAnswer;
 import com.example.projectquiz.repository.UserAnswerRepository;
+import com.example.projectquiz.service.answer.UserAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

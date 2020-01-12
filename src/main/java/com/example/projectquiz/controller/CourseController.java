@@ -1,7 +1,12 @@
 package com.example.projectquiz.controller;
 
-import com.example.projectquiz.entity.Course;
-import com.example.projectquiz.service.CourseService;
+import com.example.projectquiz.dto.CourseDto;
+import com.example.projectquiz.entity.CourseEntity;
+import com.example.projectquiz.io.ErrorResponse;
+import com.example.projectquiz.io.ResponseObject;
+import com.example.projectquiz.io.SuccessResponse;
+import com.example.projectquiz.service.course.CourseService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.enterprise.inject.spi.Bean;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/courses")
 public class CourseController {
     private CourseService courseService;
 
@@ -22,66 +29,104 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    @RequestMapping(value = "/course" , method = RequestMethod.GET)
-    public ResponseEntity<List<Course>> findAllCourse(){
-        List<Course> course = courseService.findAllCourse();
-        if(course.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    @GetMapping()
+    public ResponseEntity<?> findAllCourse(){
+
+        List<CourseDto> courseDtos = courseService.findAllCourse();
+
+        if(courseDtos.isEmpty() || courseDtos==null ){
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.NOT_FOUND.value(),
+                            ErrorResponse.NO_RECORD_FOUND.getErrorMessage()),
+                    HttpStatus.NOT_FOUND);
+        }else{
+            List<CourseDto> responses = new ArrayList<>();
+
+            for (CourseDto courseDto : courseDtos){
+                CourseDto cou = new CourseDto();
+                BeanUtils.copyProperties(courseDto,cou);
+
+                responses.add(cou);
+            }
+            return new ResponseEntity<>(responses, HttpStatus.OK);
         }
-        return new ResponseEntity<>(course,HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/course/{id}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Course> getCourseById(@PathVariable("id") Integer idCourse) {
-        Optional<Course> course = courseService.findById(idCourse);
+    @RequestMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getCourseById(@PathVariable("id") Long idCourse) {
 
-        if (!course.isPresent()) {
-            return new ResponseEntity<>(course.get(),
-                    HttpStatus.NO_CONTENT);
+        CourseDto courseDto = courseService.findById(idCourse);
+
+        if (courseDto==null) {
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.NOT_FOUND.value(),
+                            ErrorResponse.NO_RECORD_FOUND.getErrorMessage()),
+                    HttpStatus.NOT_FOUND);
+        }else{
+            return new ResponseEntity<>(courseDto ,HttpStatus.OK);
         }
-        return new ResponseEntity<>(course.get(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/createcourse", method = RequestMethod.POST)
-    public ResponseEntity<Course> createCourse(
-            @RequestBody Course course,
-            UriComponentsBuilder builder) {
-        courseService.save(course);
-        return new ResponseEntity<>(course, HttpStatus.CREATED);
-    }
+    @PostMapping()
+    public ResponseEntity<?> createCourse(@RequestBody CourseDto courseDto) {
+        CourseDto requestDto = new CourseDto();
+        BeanUtils.copyProperties(courseDto,requestDto);
 
-    @RequestMapping(value = "/course/{id}",
-            method = RequestMethod.DELETE)
-    public ResponseEntity<Course> deleteCourse(
-            @PathVariable("id") Integer idCourse) {
-        Optional<Course> course = courseService.findById(idCourse);
-        if (!course.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        courseService.remove(course.get());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+        CourseDto createdCourse = courseService.createCourse(requestDto);
 
-    @RequestMapping(value = "/course/{id}",
-            method = RequestMethod.PUT)
-    public ResponseEntity<Course> updateCourse(
-            @PathVariable("id") Integer idCourse,
-            @RequestBody Course course) {
-        Optional<Course> currentCourse = courseService
-                .findById(idCourse);
-
-        if (!currentCourse.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (createdCourse==null){
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.BAD_REQUEST.value(),
+                            ErrorResponse.CREATE_FAILED.getErrorMessage()),
+                    HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(createdCourse, HttpStatus.CREATED);
         }
 
-        currentCourse.get().setNameCourse(course.getNameCourse());
-        currentCourse.get().setQuantityQuestion(course.getQuantityQuestion());
-        currentCourse.get().setTime(course.getTime());
+    }
+//
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity<?> deleteCourse(@PathVariable("id") Long idCourse) {
+        boolean isCourseDeleted = courseService.deleteCourse(idCourse);
 
-        courseService.save(currentCourse.get());
-        return new ResponseEntity<>(currentCourse.get(), HttpStatus.OK);
+        if (!isCourseDeleted) {
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                            ErrorResponse.DELETE_FAILED.getErrorMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }else{
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.OK.value(),
+                            SuccessResponse.DELETE_SUCCESS.getSuccessMessage()),
+                    HttpStatus.OK);
+        }
+    }
+
+    @PutMapping(value = "{id}")
+    public ResponseEntity<?> updateCourse(
+            @PathVariable("id") Long idCourse,
+            @RequestBody CourseDto courseDto) {
+        CourseDto cou = new CourseDto();
+        BeanUtils.copyProperties(courseDto,cou);
+
+        CourseDto updatecourse = courseService.updateCourse(idCourse,cou);
+
+        if (updatecourse==null){
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.BAD_REQUEST.value(),
+                            ErrorResponse.UPDATE_FAILED.getErrorMessage()),
+                    HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<>(updatecourse, HttpStatus.OK);
+        }
+
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.projectquiz.service;
+package com.example.projectquiz.service.answer;
 
 import com.example.projectquiz.entity.UserAnswer;
 

@@ -1,24 +1,27 @@
 package com.example.projectquiz.controller;
 
-import com.example.projectquiz.entity.QA;
-import com.example.projectquiz.service.QAService;
+import com.example.projectquiz.dto.QaDto;
+import com.example.projectquiz.entity.QaEntity;
+import com.example.projectquiz.io.ErrorResponse;
+import com.example.projectquiz.io.ResponseObject;
+import com.example.projectquiz.io.SuccessResponse;
+import com.example.projectquiz.io.request.UserUpdateRequest;
+import com.example.projectquiz.io.response.QaDetailsResponse;
+import com.example.projectquiz.service.qa.QAService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-//import org.springframework.web.bind.annotation.RequestBody;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestMethod;
-//import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/qas")
 public class QAController {
 
     private QAService qaService;
@@ -29,62 +32,92 @@ public class QAController {
     }
 
 
-    @RequestMapping(value = "/qa/{idCourse}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<QA>> getQaByIdCourse(@PathVariable Integer idCourse) {
-        //System.out.println("idCourse : " + idCourse);
-        List<QA> qa = qaService.getQaByIdcourse(idCourse);
+    @RequestMapping(value = "{idCourse}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getQaByIdCourse(@PathVariable Long idCourse) {
+        List<QaDto> qaDtos = qaService.findByIdCourse(idCourse);
 
-        if (qa.isEmpty()) {
-            return new ResponseEntity<>(qa,
-                    HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(qa, HttpStatus.OK);
-    }
+        if (qaDtos==null){
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.NOT_FOUND.value(),
+                            ErrorResponse.NO_RECORD_FOUND.getErrorMessage()),
+                    HttpStatus.NOT_FOUND);
+        }else{
+            List<QaDetailsResponse> qares = new ArrayList<>();
+            for (QaDto qaDto : qaDtos){
+                QaDetailsResponse qar = new QaDetailsResponse();
+                BeanUtils.copyProperties(qaDto,qar);
 
-    @RequestMapping(value = "/createqa", method = RequestMethod.POST)
-    public ResponseEntity<QA> createQA(
-            @RequestBody QA qa,
-            UriComponentsBuilder builder) {
-        qaService.save(qa);
-        return new ResponseEntity<>(qa, HttpStatus.CREATED);
-    }
-
-    @RequestMapping(value = "/qa/{id}",
-            method = RequestMethod.DELETE)
-    public ResponseEntity<QA> deleteQA(
-            @PathVariable("id") Integer idCourseQuestion) {
-        Optional<QA> qa = qaService.findById(idCourseQuestion);
-        if (!qa.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        qaService.remove(qa.get());
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @RequestMapping(value = "/qa/{id}",
-            method = RequestMethod.PUT)
-    public ResponseEntity<QA> updateQA(
-            @PathVariable("id") Integer idCourseQuestion,
-            @RequestBody QA qa) {
-        Optional<QA> currentQA = qaService.findById(idCourseQuestion);
-
-        if (!currentQA.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                qares.add(qar);
+            }
+            return new ResponseEntity<>(qares,HttpStatus.OK);
         }
 
-        currentQA.get().setIdCourse(qa.getIdCourse());
-        currentQA.get().setNameQuestion(qa.getNameQuestion());
-        currentQA.get().setOptionA(qa.getOptionA());
-        currentQA.get().setOptionB(qa.getOptionB());
-        currentQA.get().setOptionC(qa.getOptionC());
-        currentQA.get().setOptionD(qa.getOptionD());
-        currentQA.get().setCorrectAnswer(qa.getCorrectAnswer());
-
-        qaService.save(currentQA.get());
-        return new ResponseEntity<>(currentQA.get(), HttpStatus.OK);
     }
+
+    @PostMapping
+    public ResponseEntity<?> createQA(@RequestBody QaEntity qa) {
+        QaDto qaDto = new QaDto();
+        BeanUtils.copyProperties(qa,qaDto);
+
+        QaDto createdQa = qaService.createQa(qaDto);
+
+        if (createdQa==null){
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.BAD_REQUEST.value(),
+                            ErrorResponse.CREATE_FAILED.getErrorMessage()),
+                    HttpStatus.BAD_REQUEST);
+        }else{
+
+            return new ResponseEntity<>(createdQa,HttpStatus.CREATED);
+        }
+    }
+
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity<?> deleteQA(
+            @PathVariable("id") Long idCourseQuestion) {
+        boolean isQaDeleted = qaService.deleteQa(idCourseQuestion);
+
+        if(!isQaDeleted){
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                            ErrorResponse.DELETE_FAILED.getErrorMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }else{
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.OK.value(),
+                            SuccessResponse.DELETE_SUCCESS.getSuccessMessage()),
+                    HttpStatus.OK);
+        }
+    }
+//
+    @PutMapping(value = "{id}")
+    public ResponseEntity<?> updateQa (
+            @PathVariable("id") Long idCourseQuestion,
+            @RequestBody QaDto qaDto){
+
+        QaDto qaDtoreceive = new QaDto();
+        BeanUtils.copyProperties(qaDto,qaDtoreceive);
+
+        QaDto updatedQa = qaService.updateQa(idCourseQuestion,qaDtoreceive);
+
+        if (updatedQa==null){
+            return new ResponseEntity<>(
+                    new ResponseObject(
+                            HttpStatus.BAD_REQUEST.value(),
+                            ErrorResponse.UPDATE_FAILED.getErrorMessage()),
+                    HttpStatus.BAD_REQUEST);
+        }else{
+            QaDto newQa = new QaDto();
+            BeanUtils.copyProperties(updatedQa,newQa);
+
+            return new ResponseEntity<>(newQa, HttpStatus.OK);
+        }
+    }
+
 
 
 }
