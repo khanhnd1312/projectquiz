@@ -13,7 +13,7 @@ import java.sql.Time;
 @Getter
 @Setter
 @Entity(name="tbl_user_course_answer")
-public class UserAnswer implements Serializable  {
+public class UserAnswerEntity implements Serializable  {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -24,11 +24,8 @@ public class UserAnswer implements Serializable  {
     private Integer idUser;
     private String  strResult;
     private Integer totalCorrect;
-    private Integer intStatus;
-    private Time timeStart;
-    private Time timeEnd;
 
-    public UserAnswer(){
+    public UserAnswerEntity(){
 
     }
 

@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,4 +17,5 @@ public class CourseDto implements Serializable {
     private String nameCourse;
     private Integer quantityQuestion;
     private Time time;
+    private List<CourseQuestionDto> courseQuestions;
 }

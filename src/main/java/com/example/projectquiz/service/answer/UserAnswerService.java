@@ -1,7 +1,7 @@
 package com.example.projectquiz.service.answer;
 
-import com.example.projectquiz.entity.UserAnswer;
+import com.example.projectquiz.dto.CourseDto;
 
 public interface UserAnswerService {
-    void save (UserAnswer userAnswer);
+    Integer examResult(CourseDto courseDto);
 }

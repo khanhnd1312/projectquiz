@@ -35,7 +35,7 @@ public class QaEntity implements Serializable {
     private String optionD;
 
     @Column(name = "correct_answer")
-    private Integer correctAnswer;
+    private Long correctAnswer;
 
     public QaEntity() {
     }

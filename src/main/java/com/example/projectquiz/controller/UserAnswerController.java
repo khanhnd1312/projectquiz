@@ -1,15 +1,15 @@
 package com.example.projectquiz.controller;
 
-import com.example.projectquiz.entity.AnswerOnly;
+import com.example.projectquiz.dto.CourseDto;
 import com.example.projectquiz.entity.QaEntity;
+import com.example.projectquiz.io.request.course.CourseRequest;
 import com.example.projectquiz.service.qa.QAService;
 import com.example.projectquiz.service.answer.UserAnswerService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -18,6 +18,7 @@ import java.util.List;
 public class UserAnswerController {
 
     private UserAnswerService userAnswerService;
+    private ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     private QAService qaService;
@@ -26,23 +27,16 @@ public class UserAnswerController {
     public UserAnswerController(UserAnswerService userAnswerService) {this.userAnswerService = userAnswerService;}
 
 
-//    @RequestMapping (value = "/doexam/{idCourse}",method = RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE )
-//    public ResponseEntity<?> postExam(
-//            @RequestBody List<AnswerOnly> ao,
-//            UriComponentsBuilder builder,
-//            @PathVariable Long idCourse) {
-//
-//        List<QaEntity> getlistqa = qaService.findByIdCourse(idCourse);
-//
-//        int kq = 0;
-//        for (int i = 0 ; i < getlistqa.size() ; i++){
-//            if(ao.get(i).getIdCourseQuestion() == getlistqa.get(i).getIdCourseQuestion()){
-//                if(ao.get(i).getIdAnswer() == getlistqa.get(i).getCorrectAnswer()){
-//                    kq += 1;
-//                }
-//            }
-//        }
-//
-//        return new ResponseEntity(kq,HttpStatus.CREATED);
-//    }
+    @PostMapping (value = "/doexam/{idCourse}")
+    public ResponseEntity<?> postExam(
+            @RequestBody CourseRequest courseRequest,
+            @PathVariable Long idCourse) {
+
+        CourseDto courseDto = modelMapper.map(courseRequest, CourseDto.class);
+        courseDto.setIdCourse(idCourse);
+
+        userAnswerService.examResult(courseDto);
+
+        return null;
+    }
 }

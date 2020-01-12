@@ -5,7 +5,6 @@ import com.example.projectquiz.entity.QaEntity;
 import com.example.projectquiz.io.ErrorResponse;
 import com.example.projectquiz.io.ResponseObject;
 import com.example.projectquiz.io.SuccessResponse;
-import com.example.projectquiz.io.request.UserUpdateRequest;
 import com.example.projectquiz.io.response.QaDetailsResponse;
 import com.example.projectquiz.service.qa.QAService;
 import org.springframework.beans.BeanUtils;
@@ -15,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 

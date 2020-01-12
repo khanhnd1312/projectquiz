@@ -1,4 +1,4 @@
-package com.example.projectquiz.io.request;
+package com.example.projectquiz.io.request.user;
 
 import lombok.Getter;
 import lombok.Setter;

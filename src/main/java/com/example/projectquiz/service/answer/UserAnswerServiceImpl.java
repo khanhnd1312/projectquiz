@@ -1,10 +1,15 @@
 package com.example.projectquiz.service.answer;
 
-import com.example.projectquiz.entity.UserAnswer;
+import com.example.projectquiz.dto.CourseDto;
+import com.example.projectquiz.dto.CourseQuestionDto;
+import com.example.projectquiz.entity.QaEntity;
+import com.example.projectquiz.entity.UserAnswerEntity;
+import com.example.projectquiz.repository.QARepository;
 import com.example.projectquiz.repository.UserAnswerRepository;
-import com.example.projectquiz.service.answer.UserAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserAnswerServiceImpl implements UserAnswerService {
@@ -12,8 +17,36 @@ public class UserAnswerServiceImpl implements UserAnswerService {
     private UserAnswerRepository userAnswerRepository;
 
     @Autowired
-    public UserAnswerServiceImpl(UserAnswerRepository userAnswerRepository) {this.userAnswerRepository = userAnswerRepository;}
+    private QARepository qaRepository;
+
+    @Autowired
+    public UserAnswerServiceImpl(UserAnswerRepository userAnswerRepository) {
+        this.userAnswerRepository = userAnswerRepository;
+    }
 
     @Override
-    public void save(UserAnswer userAnswer) {userAnswerRepository.save(userAnswer);}
+    public Integer examResult(CourseDto courseDto) {
+        //Question list
+        List<QaEntity> getlistqa = qaRepository.findAllByIdCourse(courseDto.getIdCourse());
+        List<CourseQuestionDto> ao = courseDto.getCourseQuestions();
+        Integer result = 0;
+
+        for (int i = 0; i < getlistqa.size(); i++) {
+            if (courseDto.getCourseQuestions().get(i).getIdCourseQuestion() == getlistqa.get(i).getIdCourseQuestion()) {
+                if (ao.get(i).getIdCourseAnswer() == getlistqa.get(i).getCorrectAnswer()) {
+                    result += 1;
+                }
+            }
+        }
+
+        saveResult(courseDto.getIdCourse(), ao, result);
+
+        return result;
+    }
+
+    private boolean saveResult(Long idCourse, List<CourseQuestionDto> ao, Integer result) {
+        UserAnswerEntity userAnswerEntity = new UserAnswerEntity();
+    }
+
+
 }
