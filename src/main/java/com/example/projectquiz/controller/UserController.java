@@ -23,10 +23,10 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
     private UserService userService;
 
-    public UserController(UserService userService)
+    @Autowired
+    public UserController(UserService userService){this.userService = userService;}
 
     @GetMapping()
     public ResponseEntity<?> findAllUser() {
@@ -72,7 +72,7 @@ public class UserController {
         }
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<?> createUser(@RequestBody @Valid UserSignUpRequest request) {
 
         UserDto requestDto = new UserDto();
