@@ -3,10 +3,7 @@ package com.example.projectquiz.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Time;
 
@@ -18,11 +15,18 @@ public class UserAnswerEntity implements Serializable  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer idUserCourseAnswer;
+    private Long idUserCourseAnswer;
 
-    private Integer idCourse;
+    @Column(name = "id_course")
+    private Long idCourse;
+
+    @Column(name = "id_user")
     private Integer idUser;
+
+    @Column(name = "result")
     private String  strResult;
+
+    @Column(name = "total_correct")
     private Integer totalCorrect;
 
     public UserAnswerEntity(){

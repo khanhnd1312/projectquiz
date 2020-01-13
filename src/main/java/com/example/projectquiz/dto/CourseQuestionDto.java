@@ -14,4 +14,11 @@ public class CourseQuestionDto implements Serializable {
     private Long idCourseQuestion;
     private Long idCourseAnswer;
 
+    @Override
+    public String toString() {
+        return "CourseQuestions{" +
+                "idCourseQuestion=" + idCourseQuestion +
+                ", idCourseAnswer='" + idCourseAnswer + '\'' +
+                '}';
+    }
 }

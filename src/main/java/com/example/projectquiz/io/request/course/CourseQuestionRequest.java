@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseQuestionRequest {
-    private Integer idCourseQuestion;
-    private Integer idCourseAnswer;
+    private Long idCourseQuestion;
+    private Long idCourseAnswer;
 }

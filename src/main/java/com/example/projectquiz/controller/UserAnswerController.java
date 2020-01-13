@@ -7,6 +7,7 @@ import com.example.projectquiz.service.qa.QAService;
 import com.example.projectquiz.service.answer.UserAnswerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +25,12 @@ public class UserAnswerController {
     private QAService qaService;
 
     @Autowired
-    public UserAnswerController(UserAnswerService userAnswerService) {this.userAnswerService = userAnswerService;}
+    public UserAnswerController(UserAnswerService userAnswerService) {
+        this.userAnswerService = userAnswerService;
+    }
 
 
-    @PostMapping (value = "/doexam/{idCourse}")
+    @PostMapping(value = "/doexam/{idCourse}")
     public ResponseEntity<?> postExam(
             @RequestBody CourseRequest courseRequest,
             @PathVariable Long idCourse) {
@@ -35,8 +38,12 @@ public class UserAnswerController {
         CourseDto courseDto = modelMapper.map(courseRequest, CourseDto.class);
         courseDto.setIdCourse(idCourse);
 
-        userAnswerService.examResult(courseDto);
+        Integer examResult = userAnswerService.examResult(courseDto);
 
-        return null;
+        if (examResult == null){
+            return ResponseEntity.ok("Failed");
+        } else {
+            return ResponseEntity.ok(examResult);
+        }
     }
 }
