@@ -1,19 +1,14 @@
 package com.example.projectquiz.service.course;
 
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import com.example.projectquiz.dto.CourseDto;
-import com.example.projectquiz.dto.UserDto;
 import com.example.projectquiz.entity.CourseEntity;
 import com.example.projectquiz.repository.CourseRepository;
-import com.example.projectquiz.service.course.CourseService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.enterprise.inject.spi.Bean;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseService {

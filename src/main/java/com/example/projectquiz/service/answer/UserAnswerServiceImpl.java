@@ -1,14 +1,11 @@
 package com.example.projectquiz.service.answer;
 
-import com.example.projectquiz.dto.AnswerDto;
 import com.example.projectquiz.dto.CourseDto;
 import com.example.projectquiz.dto.CourseQuestionDto;
 import com.example.projectquiz.entity.QaEntity;
 import com.example.projectquiz.entity.UserAnswerEntity;
 import com.example.projectquiz.repository.QARepository;
 import com.example.projectquiz.repository.UserAnswerRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

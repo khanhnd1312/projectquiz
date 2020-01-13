@@ -4,15 +4,12 @@ package com.example.projectquiz.service.qa;
 import com.example.projectquiz.dto.QaDto;
 import com.example.projectquiz.entity.QaEntity;
 import com.example.projectquiz.repository.QARepository;
-import com.example.projectquiz.service.qa.QAService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.enterprise.inject.spi.Bean;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class QAServiceImpl implements QAService {

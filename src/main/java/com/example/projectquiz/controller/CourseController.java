@@ -1,7 +1,6 @@
 package com.example.projectquiz.controller;
 
 import com.example.projectquiz.dto.CourseDto;
-import com.example.projectquiz.entity.CourseEntity;
 import com.example.projectquiz.io.ErrorResponse;
 import com.example.projectquiz.io.ResponseObject;
 import com.example.projectquiz.io.SuccessResponse;
@@ -12,12 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.enterprise.inject.spi.Bean;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/courses")

@@ -3,7 +3,6 @@ package com.example.projectquiz.service.course;
 import com.example.projectquiz.dto.CourseDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CourseService {
 

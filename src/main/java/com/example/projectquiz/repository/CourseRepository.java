@@ -1,7 +1,6 @@
 package com.example.projectquiz.repository;
 
 import com.example.projectquiz.entity.CourseEntity;
-import com.example.projectquiz.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
