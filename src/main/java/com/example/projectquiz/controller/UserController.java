@@ -1,9 +1,11 @@
 package com.example.projectquiz.controller;
 
 import com.example.projectquiz.dto.UserDto;
+import com.example.projectquiz.dto.UserSession;
 import com.example.projectquiz.io.ErrorResponse;
 import com.example.projectquiz.io.ResponseObject;
 import com.example.projectquiz.io.SuccessResponse;
+import com.example.projectquiz.io.request.user.LoginRequest;
 import com.example.projectquiz.io.request.user.UserSignUpRequest;
 import com.example.projectquiz.io.request.user.UserUpdateRequest;
 import com.example.projectquiz.io.response.UserDetailsResponse;
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,8 +112,8 @@ public class UserController {
                             ErrorResponse.UPDATE_FAILED.getErrorMessage()),
                     HttpStatus.BAD_REQUEST);
         } else {
-             UserDetailsResponse res = new UserDetailsResponse();
-             BeanUtils.copyProperties(updatedUser, res);
+            UserDetailsResponse res = new UserDetailsResponse();
+            BeanUtils.copyProperties(updatedUser, res);
 
             return new ResponseEntity<>(res, HttpStatus.OK);
         }
@@ -135,6 +138,14 @@ public class UserController {
         }
     }
 
+    @PostMapping(value = "/login")
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest req, HttpServletRequest request) {
+        UserSession result = userService.login(req);
 
+        // Result is token. Set session.
+        request.getSession().setAttribute("USER_SESSION", result);
+
+        return ResponseEntity.ok("Đăng nhập thành công");
+    }
 
 }

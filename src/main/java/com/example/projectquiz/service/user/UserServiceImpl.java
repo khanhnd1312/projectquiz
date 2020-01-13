@@ -1,10 +1,14 @@
 package com.example.projectquiz.service.user;
 
 import com.example.projectquiz.dto.UserDto;
+import com.example.projectquiz.dto.UserSession;
 import com.example.projectquiz.entity.UserEntity;
+import com.example.projectquiz.io.request.user.LoginRequest;
 import com.example.projectquiz.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +19,26 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private ModelMapper modelMapper = new ModelMapper();
+
+    @Override
+    public UserSession login(LoginRequest req) {
+        // Lấy thông tin user
+        UserEntity userEntity = userRepository.findByAccountUser(req.getAccountUser());
+
+        if (userEntity == null) {
+            throw new RuntimeException("Email does not exist in the system");
+        }
+
+        // Kiểm tra password
+        boolean result = BCrypt.checkpw(req.getPasswordUser(), userEntity.getPasswordUser());
+        if (!result) {
+            throw new RuntimeException("Password wrong");
+        }
+
+        return modelMapper.map(userEntity, UserSession.class);
+    }
 
     @Override
     public List<UserDto> findAllUser() {
@@ -60,13 +84,24 @@ public class UserServiceImpl implements UserService {
             if (isAccountUserExist(requestDto.getAccountUser())) {
                 return null;
             } else {
-                UserEntity userEntity = new UserEntity();
-                BeanUtils.copyProperties(requestDto, userEntity);
 
-                UserDto createdUser = new UserDto();
-                BeanUtils.copyProperties(userRepository.save(userEntity), createdUser);
+                UserEntity userEntity = modelMapper.map(requestDto, UserEntity.class);
+//                UserEntity userEntity = new UserEntity();
+//                BeanUtils.copyProperties(requestDto, userEntity);
 
-                return createdUser;
+
+                String hash = BCrypt.hashpw(requestDto.getPasswordUser(),
+                        BCrypt.gensalt(12));
+                userEntity.setPasswordUser(hash);
+                userEntity.setRole("STUDENT");
+
+                UserEntity createdUser = userRepository.save(userEntity);
+                return modelMapper.map(createdUser, UserDto.class);
+
+//                UserDto createdUser = new UserDto();
+//                BeanUtils.copyProperties(userRepository.save(userEntity), createdUser);
+//
+//                return createdUser;
             }
         } catch (Exception e) {
             return null;
