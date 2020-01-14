@@ -140,12 +140,18 @@ public class UserController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest req, HttpServletRequest request) {
-        UserSession result = userService.login(req);
+        try{
+            UserSession result = userService.login(req);
 
-        // Result is token. Set session.
-        request.getSession().setAttribute("USER_SESSION", result);
+            // Result is token. Set session.
+            request.getSession().setAttribute("USER_SESSION", result);
 
-        return ResponseEntity.ok("Đăng nhập thành công");
+            return ResponseEntity.ok("LOGIN SUCCESS");
+        } catch (Exception e){
+            return ResponseEntity.ok(e.getMessage());
+        }
+
+
     }
 
 }

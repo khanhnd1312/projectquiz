@@ -6,6 +6,7 @@ import com.example.projectquiz.entity.QaEntity;
 import com.example.projectquiz.entity.UserAnswerEntity;
 import com.example.projectquiz.repository.QARepository;
 import com.example.projectquiz.repository.UserAnswerRepository;
+import com.example.projectquiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Service
 public class UserAnswerServiceImpl implements UserAnswerService {
 
+    private UserRepository userRepository;
     private UserAnswerRepository userAnswerRepository;
 
     @Autowired
@@ -38,6 +40,8 @@ public class UserAnswerServiceImpl implements UserAnswerService {
                 }
             }
         }
+
+
 
         if (saveResult(courseDto.getIdCourse(), ao, result)) {
             return result;
