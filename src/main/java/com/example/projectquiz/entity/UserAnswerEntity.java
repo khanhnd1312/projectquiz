@@ -20,7 +20,7 @@ public class UserAnswerEntity implements Serializable {
     private Long idCourse;
 
     @Column(name = "id_user")
-    private Integer idUser;
+    private Long idUser;
 
     @Column(name = "result")
     private String strResult;

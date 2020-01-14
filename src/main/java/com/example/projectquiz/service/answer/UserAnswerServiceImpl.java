@@ -8,6 +8,8 @@ import com.example.projectquiz.repository.QARepository;
 import com.example.projectquiz.repository.UserAnswerRepository;
 import com.example.projectquiz.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,17 +43,19 @@ public class UserAnswerServiceImpl implements UserAnswerService {
             }
         }
 
+        Long idUser = getUserId();
 
-        if (saveResult(courseDto.getIdCourse(), ao, result)) {
+        if (saveResult(courseDto.getIdCourse(), ao, result , idUser)) {
             return result;
         } else {
             return null;
         }
     }
 
-    private boolean saveResult(Long idCourse, List<CourseQuestionDto> ao, Integer result) {
+    private boolean saveResult(Long idCourse, List<CourseQuestionDto> ao, Integer result , Long idUser) {
         try {
             UserAnswerEntity userAnswerEntity = new UserAnswerEntity();
+            userAnswerEntity.setIdUser(idUser);
             userAnswerEntity.setIdCourse(idCourse);
             userAnswerEntity.setStrResult(ao.toString());
             userAnswerEntity.setTotalCorrect(result);
@@ -63,6 +67,14 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         } catch (Exception e) {
             return false;
         }
+
+    }
+
+    private Long getUserId(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        // Đây là lấy ra userId vì mình set thế
+        long idUser = (long) auth.getPrincipal();
+        return idUser;
 
     }
 
