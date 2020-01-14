@@ -9,7 +9,7 @@ import java.sql.Time;
 
 @Getter
 @Setter
-@Entity(name="tbl_course")
+@Entity(name = "tbl_course")
 //@Table(name = "tbl_course")
 public class CourseEntity implements Serializable {
     private static final long serialVersionUID = 1L;

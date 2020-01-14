@@ -11,7 +11,8 @@ public enum ErrorResponse {
     DELETE_FAILED("Delete record failed");
 
     private String errorMessage;
-    ErrorResponse(String errorMessage){
+
+    ErrorResponse(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 }

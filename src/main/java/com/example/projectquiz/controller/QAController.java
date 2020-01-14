@@ -34,21 +34,21 @@ public class QAController {
     public ResponseEntity<?> getQaByIdCourse(@PathVariable Long idCourse) {
         List<QaDto> qaDtos = qaService.findByIdCourse(idCourse);
 
-        if (qaDtos==null){
+        if (qaDtos == null || qaDtos.isEmpty()) {
             return new ResponseEntity<>(
                     new ResponseObject(
                             HttpStatus.NOT_FOUND.value(),
                             ErrorResponse.NO_RECORD_FOUND.getErrorMessage()),
                     HttpStatus.NOT_FOUND);
-        }else{
+        } else {
             List<QaDetailsResponse> qares = new ArrayList<>();
-            for (QaDto qaDto : qaDtos){
+            for (QaDto qaDto : qaDtos) {
                 QaDetailsResponse qar = new QaDetailsResponse();
-                BeanUtils.copyProperties(qaDto,qar);
+                BeanUtils.copyProperties(qaDto, qar);
 
                 qares.add(qar);
             }
-            return new ResponseEntity<>(qares,HttpStatus.OK);
+            return new ResponseEntity<>(qares, HttpStatus.OK);
         }
 
     }
@@ -56,19 +56,19 @@ public class QAController {
     @PostMapping
     public ResponseEntity<?> createQA(@RequestBody QaEntity qa) {
         QaDto qaDto = new QaDto();
-        BeanUtils.copyProperties(qa,qaDto);
+        BeanUtils.copyProperties(qa, qaDto);
 
         QaDto createdQa = qaService.createQa(qaDto);
 
-        if (createdQa==null){
+        if (createdQa == null) {
             return new ResponseEntity<>(
                     new ResponseObject(
                             HttpStatus.BAD_REQUEST.value(),
                             ErrorResponse.CREATE_FAILED.getErrorMessage()),
                     HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
 
-            return new ResponseEntity<>(createdQa,HttpStatus.CREATED);
+            return new ResponseEntity<>(createdQa, HttpStatus.CREATED);
         }
     }
 
@@ -77,13 +77,13 @@ public class QAController {
             @PathVariable("id") Long idCourseQuestion) {
         boolean isQaDeleted = qaService.deleteQa(idCourseQuestion);
 
-        if(!isQaDeleted){
+        if (!isQaDeleted) {
             return new ResponseEntity<>(
                     new ResponseObject(
                             HttpStatus.INTERNAL_SERVER_ERROR.value(),
                             ErrorResponse.DELETE_FAILED.getErrorMessage()),
                     HttpStatus.INTERNAL_SERVER_ERROR);
-        }else{
+        } else {
             return new ResponseEntity<>(
                     new ResponseObject(
                             HttpStatus.OK.value(),
@@ -91,31 +91,31 @@ public class QAController {
                     HttpStatus.OK);
         }
     }
-//
+
+    //
     @PutMapping(value = "{id}")
-    public ResponseEntity<?> updateQa (
+    public ResponseEntity<?> updateQa(
             @PathVariable("id") Long idCourseQuestion,
-            @RequestBody QaDto qaDto){
+            @RequestBody QaDto qaDto) {
 
         QaDto qaDtoreceive = new QaDto();
-        BeanUtils.copyProperties(qaDto,qaDtoreceive);
+        BeanUtils.copyProperties(qaDto, qaDtoreceive);
 
-        QaDto updatedQa = qaService.updateQa(idCourseQuestion,qaDtoreceive);
+        QaDto updatedQa = qaService.updateQa(idCourseQuestion, qaDtoreceive);
 
-        if (updatedQa==null){
+        if (updatedQa == null) {
             return new ResponseEntity<>(
                     new ResponseObject(
                             HttpStatus.BAD_REQUEST.value(),
                             ErrorResponse.UPDATE_FAILED.getErrorMessage()),
                     HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
             QaDto newQa = new QaDto();
-            BeanUtils.copyProperties(updatedQa,newQa);
+            BeanUtils.copyProperties(updatedQa, newQa);
 
             return new ResponseEntity<>(newQa, HttpStatus.OK);
         }
     }
-
 
 
 }

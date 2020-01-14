@@ -8,9 +8,14 @@ import java.util.List;
 
 public interface UserService {
     UserSession login(LoginRequest req);
+
     List<UserDto> findAllUser();
+
     UserDto findById(Long idUser);
+
     UserDto createUser(UserDto requestDto);
+
     UserDto updateUser(Long id, UserDto requestDto);
+
     boolean deleteUser(Long id);
 }

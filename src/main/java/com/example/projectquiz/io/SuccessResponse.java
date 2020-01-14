@@ -11,7 +11,8 @@ public enum SuccessResponse {
     DELETE_SUCCESS("Delete record success");
 
     private String successMessage;
-    SuccessResponse(String successMessage){
+
+    SuccessResponse(String successMessage) {
         this.successMessage = successMessage;
     }
 }

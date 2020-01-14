@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-@Entity(name="tbl_course_question")
+@Entity(name = "tbl_course_question")
 public class QaEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

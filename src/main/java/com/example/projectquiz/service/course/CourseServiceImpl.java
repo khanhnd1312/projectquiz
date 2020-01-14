@@ -15,92 +15,93 @@ public class CourseServiceImpl implements CourseService {
     private CourseRepository courseRepository;
 
     @Autowired
-    public  CourseServiceImpl (CourseRepository courseRepository){
+    public CourseServiceImpl(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
     }
 
     @Override
-    public List<CourseDto> findAllCourse(){
-       try {
-           List<CourseEntity> courseEntities = courseRepository.findAll();
-           List<CourseDto> courseDtos = new ArrayList<>();
+    public List<CourseDto> findAllCourse() {
+        try {
+            List<CourseEntity> courseEntities = courseRepository.findAll();
+            List<CourseDto> courseDtos = new ArrayList<>();
 
-           for (CourseEntity courseEntity : courseEntities){
-               CourseDto courseDto = new CourseDto();
-               BeanUtils.copyProperties(courseEntity,courseDto);
+            for (CourseEntity courseEntity : courseEntities) {
+                CourseDto courseDto = new CourseDto();
+                BeanUtils.copyProperties(courseEntity, courseDto);
 
-               courseDtos.add(courseDto);
-           }
+                courseDtos.add(courseDto);
+            }
 
-           return  courseDtos;
+            return courseDtos;
 
-       }catch (Exception e){
-           return  null;
-       }
+        } catch (Exception e) {
+            return null;
+        }
 
     }
 
     @Override
-    public CourseDto findById(Long idCourse){
+    public CourseDto findById(Long idCourse) {
         try {
             CourseEntity courseEntity = courseRepository.findByIdCourse(idCourse);
-            if (courseEntity==null){
+            if (courseEntity == null) {
                 return null;
-            }else{
+            } else {
                 CourseDto courseDto = new CourseDto();
-                BeanUtils.copyProperties(courseEntity,courseDto);
+                BeanUtils.copyProperties(courseEntity, courseDto);
 
                 return courseDto;
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public CourseDto createCourse(CourseDto courseDto){
+    public CourseDto createCourse(CourseDto courseDto) {
 
         CourseEntity courseEntity = new CourseEntity();
-        BeanUtils.copyProperties(courseDto,courseEntity);
+        BeanUtils.copyProperties(courseDto, courseEntity);
 
         CourseDto createdCourse = new CourseDto();
-        BeanUtils.copyProperties(courseRepository.save(courseEntity) , createdCourse);
+        BeanUtils.copyProperties(courseRepository.save(courseEntity), createdCourse);
 
         return createdCourse;
 
     }
-//
-    @Override
-    public boolean deleteCourse(Long idCourse){
 
-        try{
+    //
+    @Override
+    public boolean deleteCourse(Long idCourse) {
+
+        try {
             CourseEntity courseEntity = courseRepository.findByIdCourse(idCourse);
-            if (courseEntity == null){
+            if (courseEntity == null) {
                 return false;
-            }else {
+            } else {
                 courseRepository.delete(courseEntity);
                 return true;
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
     @Override
-    public CourseDto updateCourse(Long idCourse , CourseDto courseDto){
+    public CourseDto updateCourse(Long idCourse, CourseDto courseDto) {
         CourseEntity courseEntity = courseRepository.findByIdCourse(idCourse);
 
-        if (courseEntity == null){
+        if (courseEntity == null) {
             return null;
-        }else {
+        } else {
             CourseEntity updateEntity = new CourseEntity();
-            BeanUtils.copyProperties(courseDto,updateEntity);
+            BeanUtils.copyProperties(courseDto, updateEntity);
             updateEntity.setIdCourse(idCourse);
 
             CourseDto updatedCourse = new CourseDto();
-            BeanUtils.copyProperties(courseRepository.save(updateEntity),updatedCourse);
+            BeanUtils.copyProperties(courseRepository.save(updateEntity), updatedCourse);
 
             return updatedCourse;
         }

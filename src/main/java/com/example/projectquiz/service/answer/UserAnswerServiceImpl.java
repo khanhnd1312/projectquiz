@@ -42,7 +42,6 @@ public class UserAnswerServiceImpl implements UserAnswerService {
         }
 
 
-
         if (saveResult(courseDto.getIdCourse(), ao, result)) {
             return result;
         } else {

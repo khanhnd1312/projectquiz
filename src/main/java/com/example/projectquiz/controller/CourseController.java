@@ -21,28 +21,28 @@ public class CourseController {
     private CourseService courseService;
 
     @Autowired
-    public CourseController(CourseService courseService){
+    public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
 
 
     @GetMapping()
-    public ResponseEntity<?> findAllCourse(){
+    public ResponseEntity<?> findAllCourse() {
 
         List<CourseDto> courseDtos = courseService.findAllCourse();
 
-        if(courseDtos.isEmpty() || courseDtos==null ){
+        if (courseDtos.isEmpty() || courseDtos == null) {
             return new ResponseEntity<>(
                     new ResponseObject(
                             HttpStatus.NOT_FOUND.value(),
                             ErrorResponse.NO_RECORD_FOUND.getErrorMessage()),
                     HttpStatus.NOT_FOUND);
-        }else{
+        } else {
             List<CourseDto> responses = new ArrayList<>();
 
-            for (CourseDto courseDto : courseDtos){
+            for (CourseDto courseDto : courseDtos) {
                 CourseDto cou = new CourseDto();
-                BeanUtils.copyProperties(courseDto,cou);
+                BeanUtils.copyProperties(courseDto, cou);
 
                 responses.add(cou);
             }
@@ -55,36 +55,37 @@ public class CourseController {
 
         CourseDto courseDto = courseService.findById(idCourse);
 
-        if (courseDto==null) {
+        if (courseDto == null) {
             return new ResponseEntity<>(
                     new ResponseObject(
                             HttpStatus.NOT_FOUND.value(),
                             ErrorResponse.NO_RECORD_FOUND.getErrorMessage()),
                     HttpStatus.NOT_FOUND);
-        }else{
-            return new ResponseEntity<>(courseDto ,HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(courseDto, HttpStatus.OK);
         }
     }
 
     @PostMapping()
     public ResponseEntity<?> createCourse(@RequestBody CourseDto courseDto) {
         CourseDto requestDto = new CourseDto();
-        BeanUtils.copyProperties(courseDto,requestDto);
+        BeanUtils.copyProperties(courseDto, requestDto);
 
         CourseDto createdCourse = courseService.createCourse(requestDto);
 
-        if (createdCourse==null){
+        if (createdCourse == null) {
             return new ResponseEntity<>(
                     new ResponseObject(
                             HttpStatus.BAD_REQUEST.value(),
                             ErrorResponse.CREATE_FAILED.getErrorMessage()),
                     HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
             return new ResponseEntity<>(createdCourse, HttpStatus.CREATED);
         }
 
     }
-//
+
+    //
     @DeleteMapping(value = "{id}")
     public ResponseEntity<?> deleteCourse(@PathVariable("id") Long idCourse) {
         boolean isCourseDeleted = courseService.deleteCourse(idCourse);
@@ -95,7 +96,7 @@ public class CourseController {
                             HttpStatus.INTERNAL_SERVER_ERROR.value(),
                             ErrorResponse.DELETE_FAILED.getErrorMessage()),
                     HttpStatus.INTERNAL_SERVER_ERROR);
-        }else{
+        } else {
             return new ResponseEntity<>(
                     new ResponseObject(
                             HttpStatus.OK.value(),
@@ -109,22 +110,21 @@ public class CourseController {
             @PathVariable("id") Long idCourse,
             @RequestBody CourseDto courseDto) {
         CourseDto cou = new CourseDto();
-        BeanUtils.copyProperties(courseDto,cou);
+        BeanUtils.copyProperties(courseDto, cou);
 
-        CourseDto updatecourse = courseService.updateCourse(idCourse,cou);
+        CourseDto updatecourse = courseService.updateCourse(idCourse, cou);
 
-        if (updatecourse==null){
+        if (updatecourse == null) {
             return new ResponseEntity<>(
                     new ResponseObject(
                             HttpStatus.BAD_REQUEST.value(),
                             ErrorResponse.UPDATE_FAILED.getErrorMessage()),
                     HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
             return new ResponseEntity<>(updatecourse, HttpStatus.OK);
         }
 
     }
-
 
 
 }

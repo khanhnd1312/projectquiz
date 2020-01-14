@@ -148,6 +148,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+
     private boolean isAccountUserExist(String accountUser) {
         try {
             return userRepository.existsByAccountUser(accountUser);

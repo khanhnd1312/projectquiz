@@ -8,8 +8,8 @@ import java.io.Serializable;
 
 @Getter
 @Setter
-@Entity(name="tbl_user_course_answer")
-public class UserAnswerEntity implements Serializable  {
+@Entity(name = "tbl_user_course_answer")
+public class UserAnswerEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -23,12 +23,12 @@ public class UserAnswerEntity implements Serializable  {
     private Integer idUser;
 
     @Column(name = "result")
-    private String  strResult;
+    private String strResult;
 
     @Column(name = "total_correct")
     private Integer totalCorrect;
 
-    public UserAnswerEntity(){
+    public UserAnswerEntity() {
 
     }
 

@@ -140,14 +140,14 @@ public class UserController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest req, HttpServletRequest request) {
-        try{
+        try {
             UserSession result = userService.login(req);
 
             // Result is token. Set session.
             request.getSession().setAttribute("USER_SESSION", result);
 
             return ResponseEntity.ok("LOGIN SUCCESS");
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.ok(e.getMessage());
         }
 

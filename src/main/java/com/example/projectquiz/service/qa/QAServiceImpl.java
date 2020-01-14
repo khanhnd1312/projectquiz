@@ -16,21 +16,23 @@ public class QAServiceImpl implements QAService {
     private QARepository qaRepository;
 
     @Autowired
-    public QAServiceImpl (QARepository qaRepository) {this.qaRepository = qaRepository;}
+    public QAServiceImpl(QARepository qaRepository) {
+        this.qaRepository = qaRepository;
+    }
 
     @Override
-    public List<QaDto> findByIdCourse(Long idCourse){
+    public List<QaDto> findByIdCourse(Long idCourse) {
         try {
-            List<QaEntity> qaEntities =  qaRepository.findAllByIdCourse(idCourse);
-            if (qaEntities==null){
+            List<QaEntity> qaEntities = qaRepository.findAllByIdCourse(idCourse);
+            if (qaEntities == null) {
                 return null;
-            }else{
+            } else {
 
                 List<QaDto> qaDtos = new ArrayList<>();
 
-                for (QaEntity qaEntity : qaEntities){
+                for (QaEntity qaEntity : qaEntities) {
                     QaDto qaDto = new QaDto();
-                    BeanUtils.copyProperties(qaEntity,qaDto);
+                    BeanUtils.copyProperties(qaEntity, qaDto);
 
                     qaDtos.add(qaDto);
                 }
@@ -38,58 +40,57 @@ public class QAServiceImpl implements QAService {
                 return qaDtos;
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public QaDto createQa(QaDto qaDto){
+    public QaDto createQa(QaDto qaDto) {
         QaEntity qaEntity = new QaEntity();
-        BeanUtils.copyProperties(qaDto,qaEntity);
+        BeanUtils.copyProperties(qaDto, qaEntity);
 
         QaDto createdQa = new QaDto();
-        BeanUtils.copyProperties(qaRepository.save(qaEntity),createdQa);
+        BeanUtils.copyProperties(qaRepository.save(qaEntity), createdQa);
 
         return createdQa;
 
     }
 
     @Override
-    public boolean deleteQa(Long idCourseQuestion){
+    public boolean deleteQa(Long idCourseQuestion) {
         try {
             QaEntity qaEntity = qaRepository.findByIdCourseQuestion(idCourseQuestion);
 
-            if (qaEntity==null){
+            if (qaEntity == null) {
                 return false;
-            }else {
+            } else {
                 qaRepository.delete(qaEntity);
                 return true;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
     @Override
-    public QaDto updateQa(Long idCourseQuestion , QaDto qaDtoreceive){
+    public QaDto updateQa(Long idCourseQuestion, QaDto qaDtoreceive) {
 
         QaEntity qaEntity = qaRepository.findByIdCourseQuestion(idCourseQuestion);
-        if (qaEntity==null){
+        if (qaEntity == null) {
             return null;
-        }else{
+        } else {
             QaEntity updateQaEntity = new QaEntity();
-            BeanUtils.copyProperties(qaDtoreceive,updateQaEntity);
+            BeanUtils.copyProperties(qaDtoreceive, updateQaEntity);
 
             updateQaEntity.setIdCourseQuestion(idCourseQuestion);
 
             QaDto updatedQa = new QaDto();
-            BeanUtils.copyProperties(qaRepository.save(updateQaEntity),updatedQa);
+            BeanUtils.copyProperties(qaRepository.save(updateQaEntity), updatedQa);
 
             return updatedQa;
         }
     }
-
 
 
 }

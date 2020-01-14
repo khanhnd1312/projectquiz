@@ -46,8 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf() // Trong Spring , chế độ bảo vệ khỏi CSRF mặc định được bật -> không cần thì disable đi
                 .disable()
                 .authorizeRequests()
-                    .antMatchers(HttpMethod.POST, "/api/users/login").permitAll()
-                    .antMatchers(HttpMethod.POST, "/api/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new ApiAuthorizationFilter(authenticationManager()))

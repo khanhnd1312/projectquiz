@@ -35,7 +35,7 @@ public class UserAnswerController {
 
         Integer examResult = userAnswerService.examResult(courseDto);
 
-        if (examResult == null){
+        if (examResult == null) {
             return ResponseEntity.ok("Failed");
         } else {
             return ResponseEntity.ok(examResult);
