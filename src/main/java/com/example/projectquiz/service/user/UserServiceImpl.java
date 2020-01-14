@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = userRepository.findByAccountUser(req.getAccountUser());
 
         if (userEntity == null) {
-            throw new RuntimeException("Email does not exist in the system");
+            throw new RuntimeException("Account does not exist in the system");
         }
 
         // Kiểm tra password

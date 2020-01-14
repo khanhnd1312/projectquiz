@@ -54,7 +54,7 @@ public class UserAnswerServiceImpl implements UserAnswerService {
             userAnswerEntity.setTotalCorrect(result);
 
             UserAnswerEntity savedAnswer = userAnswerRepository.save(userAnswerEntity);
-            savedAnswer.getStrResult();
+            //savedAnswer.getStrResult();
 
             return true;
         } catch (Exception e) {

@@ -25,7 +25,7 @@ public class UserAnswerController {
     }
 
 
-    @PostMapping(value = "/doexam/{idCourse}")
+    @PostMapping(value = "/startexam/{idCourse}")
     public ResponseEntity<?> postExam(
             @RequestBody CourseRequest courseRequest,
             @PathVariable Long idCourse) {
