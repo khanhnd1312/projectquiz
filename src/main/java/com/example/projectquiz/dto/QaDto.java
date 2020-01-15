@@ -17,6 +17,6 @@ public class QaDto implements Serializable {
     private String optionB;
     private String optionC;
     private String optionD;
-    private Integer correctAnswer;
+    private Long correctAnswer;
 
 }
